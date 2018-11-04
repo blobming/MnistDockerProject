@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mnist</title>
+
+    <style type="text/css">
+        #imagewrapper{
+            width: 100px;
+            height: 100px;
+        }
+        #image{
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+</head>
+    <body>
+        <h1>MNIST</h1>
+        <h3>Please input your image</h3>
+        <div>
+            <form id="imageForm">
+                <input id="photo" type="file" size="30" name="photo"/>
+                <input type="button" value="submit" onclick="submitForm()">
+            </form>
+        </div>
+        <h3>the image is :</h3>
+        <div id="imagewrapper">
+            <img id="image" src="" ></img>
+        </div>
+        <h3>the predict result is:   <span id="preditResult"></span></h3>
+    </body>
+</html>
+<script type="text/javascript">
+    function getFileUrl(sourceId) {
+		var url;
+		url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));
+		return url;
+	}
+	function preImg(sourceId, targetId) {
+		var url = getFileUrl(sourceId);
+		var imgPre = document.getElementById(targetId);
+		imgPre.src = url;
+	}
+    function submitForm() {
+        var data = new FormData($('#imageForm')[0]);
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/" ,
+            async:true,
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                console.log(result["number"]);
+                preImg("photo","image");
+                $("#preditResult").text(result["number"]+"");
+            },
+            error : function() {
+                alert("error！");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
